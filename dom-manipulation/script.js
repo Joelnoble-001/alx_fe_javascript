@@ -158,12 +158,24 @@ async function syncWithServer() {
   try {
     const serverQuotes = await fetchQuotesFromServer();
 
+    // Merge (server data takes precedence)
     quotes = [...serverQuotes, ...quotes].filter(
       (q, index, self) =>
         index === self.findIndex(
           t => t.text === q.text && t.category === q.category
         )
     );
+
+    // ----------------------
+    // POST local quotes to server (mock)
+    await fetch(SERVER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(quotes)
+    });
+    // ----------------------
 
     saveQuotes();
     populateCategories();
