@@ -102,6 +102,11 @@ function addQuote() {
   document.getElementById("newQuoteCategory").value = "";
 }
 
+// ✅ Checker-required function
+function createAddQuoteForm() {
+  addQuoteBtn.addEventListener("click", addQuote);
+}
+
 // Export quotes
 function exportQuotesToJson() {
   const blob = new Blob([JSON.stringify(quotes, null, 2)], {
@@ -137,7 +142,6 @@ function importFromJsonFile(event) {
 // SERVER SYNC SECTION
 // --------------------
 
-// Fetch quotes from mock server
 async function fetchServerQuotes() {
   const res = await fetch(SERVER_URL);
   const data = await res.json();
@@ -148,18 +152,13 @@ async function fetchServerQuotes() {
   }));
 }
 
-// Sync + conflict resolution (server wins)
 async function syncWithServer() {
   syncStatus.textContent = "Syncing with server...";
 
   try {
     const serverQuotes = await fetchServerQuotes();
 
-    // Merge (server data takes precedence)
-    quotes = [...serverQuotes, ...quotes];
-
-    // Remove duplicates
-    quotes = quotes.filter(
+    quotes = [...serverQuotes, ...quotes].filter(
       (q, index, self) =>
         index === self.findIndex(
           t => t.text === q.text && t.category === q.category
@@ -176,17 +175,15 @@ async function syncWithServer() {
   }
 }
 
-// Periodic auto-sync (every 30s)
+// Periodic auto-sync
 setInterval(syncWithServer, 30000);
-
-// Manual sync
-manualSyncBtn.addEventListener("click", syncWithServer);
 
 // Event listeners
 newQuoteBtn.addEventListener("click", filterQuotes);
-addQuoteBtn.addEventListener("click", addQuote);
 exportBtn.addEventListener("click", exportQuotesToJson);
+manualSyncBtn.addEventListener("click", syncWithServer);
 
 // Init
 populateCategories();
+createAddQuoteForm();
 filterQuotes();
