@@ -142,7 +142,7 @@ function importFromJsonFile(event) {
 // SERVER SYNC SECTION
 // --------------------
 
-async function fetchServerQuotes() {
+async function fetchQuotesFromServer() {
   const res = await fetch(SERVER_URL);
   const data = await res.json();
 
@@ -156,7 +156,7 @@ async function syncWithServer() {
   syncStatus.textContent = "Syncing with server...";
 
   try {
-    const serverQuotes = await fetchServerQuotes();
+    const serverQuotes = await fetchQuotesFromServer();
 
     quotes = [...serverQuotes, ...quotes].filter(
       (q, index, self) =>
