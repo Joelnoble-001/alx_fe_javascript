@@ -101,8 +101,7 @@ function addQuote() {
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
 }
-
-// ✅ Checker-required function
+// Create add quote form
 function createAddQuoteForm() {
   addQuoteBtn.addEventListener("click", addQuote);
 }
@@ -142,7 +141,6 @@ function importFromJsonFile(event) {
 // SERVER SYNC SECTION
 // --------------------
 
-// ✅ Checker-required function name
 async function fetchQuotesFromServer() {
   const res = await fetch(SERVER_URL);
   const data = await res.json();
@@ -181,13 +179,14 @@ async function syncWithServer() {
     populateCategories();
     filterQuotes();
 
-    syncStatus.textContent = "Sync complete. Server data applied.";
+   
+    syncStatus.textContent = "Quotes synced with server!";
   } catch {
     syncStatus.textContent = "Sync failed. Server unavailable.";
   }
 }
 
-// ✅ Checker-required function
+
 function syncQuotes() {
   return syncWithServer();
 }
